@@ -65,5 +65,64 @@ class ProductRepositoryTest {
         assertFalse(iterator.hasNext());
     }
 
+    @Test
+    void testEditProductPositive() {
+        Product product = new Product();
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+
+        productRepository.create(product);
+        String productId = product.getProductId();
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductName("Sampo Cap Bambang Updated");
+        updatedProduct.setProductQuantity(200);
+
+        boolean result = productRepository.update(productId, updatedProduct);
+
+        assertTrue(result);
+
+        Product saved = productRepository.findById(productId);
+        assertEquals("Sampo Cap Bambang Updated", saved.getProductName());
+        assertEquals(200, saved.getProductQuantity());
+    }
+
+    @Test
+    void testEditProductNegativeProductNotFound() {
+        String randomId = "id-tidak-ada";
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductName("Produk Ga Ada");
+        updatedProduct.setProductQuantity(10);
+
+        boolean result = productRepository.update(randomId, updatedProduct);
+
+        assertFalse(result);
+    }
+
+    @Test
+    void testDeleteProductPositive() {
+        Product product = new Product();
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+
+        productRepository.create(product);
+        String productId = product.getProductId();
+
+        boolean deleteResult = productRepository.delete(productId);
+        assertTrue(deleteResult);
+
+        Product deleted = productRepository.findById(productId);
+        assertNull(deleted);
+    }
+
+    @Test
+    void testDeleteProductNegativeProductNotFound() {
+        String randomId = "id-tidak-ada";
+
+        boolean deleteResult = productRepository.delete(randomId);
+
+        assertFalse(deleteResult);
+    }
 
 }
