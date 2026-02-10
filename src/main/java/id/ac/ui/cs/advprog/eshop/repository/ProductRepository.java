@@ -40,4 +40,10 @@ public class ProductRepository {
         }
         return null;
     }
+
+    public boolean deleteById(String id) {
+        return productData.removeIf(
+                product -> product.getProductId().equals(id)
+        );
+    }
 }
