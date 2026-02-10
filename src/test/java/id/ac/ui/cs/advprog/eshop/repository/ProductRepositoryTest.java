@@ -74,30 +74,30 @@ class ProductRepositoryTest {
         productRepository.create(product);
         String productId = product.getProductId();
 
-        Product updatedProduct = new Product();
-        updatedProduct.setProductName("Sampo Cap Bambang Updated");
-        updatedProduct.setProductQuantity(200);
+        // update object yang SAMA (id WAJIB ada)
+        product.setProductName("Sampo Cap Bambang Updated");
+        product.setProductQuantity(200);
 
-        boolean result = productRepository.update(productId, updatedProduct);
+        Product updated = productRepository.update(product);
 
-        assertTrue(result);
+        assertNotNull(updated);
 
         Product saved = productRepository.findById(productId);
         assertEquals("Sampo Cap Bambang Updated", saved.getProductName());
         assertEquals(200, saved.getProductQuantity());
     }
 
+
     @Test
     void testEditProductNegativeProductNotFound() {
-        String randomId = "id-tidak-ada";
+        Product product = new Product();
+        product.setProductId("id-tidak-ada");
+        product.setProductName("Produk Ga Ada");
+        product.setProductQuantity(10);
 
-        Product updatedProduct = new Product();
-        updatedProduct.setProductName("Produk Ga Ada");
-        updatedProduct.setProductQuantity(10);
+        Product result = productRepository.update(product);
 
-        boolean result = productRepository.update(randomId, updatedProduct);
-
-        assertFalse(result);
+        assertNull(result);
     }
 
     @Test
@@ -109,7 +109,7 @@ class ProductRepositoryTest {
         productRepository.create(product);
         String productId = product.getProductId();
 
-        boolean deleteResult = productRepository.delete(productId);
+        boolean deleteResult = productRepository.deleteById(productId);
         assertTrue(deleteResult);
 
         Product deleted = productRepository.findById(productId);
@@ -120,7 +120,7 @@ class ProductRepositoryTest {
     void testDeleteProductNegativeProductNotFound() {
         String randomId = "id-tidak-ada";
 
-        boolean deleteResult = productRepository.delete(randomId);
+        boolean deleteResult = productRepository.deleteById(randomId);
 
         assertFalse(deleteResult);
     }
