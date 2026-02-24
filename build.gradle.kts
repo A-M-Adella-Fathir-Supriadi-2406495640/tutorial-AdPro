@@ -7,6 +7,7 @@ plugins {
     jacoco
     id("org.springframework.boot") version "3.5.10"
     id("io.spring.dependency-management") version "1.1.7"
+    id("pmd")
 }
 
 group = "id.ac.ui.cs.advprog"
@@ -44,6 +45,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:${junitJupiterVersion}")
 }
 
+pmd {
+    toolVersion = "7.0.0-rc4" // supaya tidak pakai rules default lama
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
@@ -78,6 +83,13 @@ tasks.test{
     }
 
     finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.withType<Pmd>().configureEach {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
 
 tasks.jacocoTestReport {

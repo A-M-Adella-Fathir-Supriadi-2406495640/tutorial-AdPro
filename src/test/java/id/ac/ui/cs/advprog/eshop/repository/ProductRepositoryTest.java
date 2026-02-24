@@ -125,4 +125,40 @@ class ProductRepositoryTest {
         assertFalse(deleteResult);
     }
 
+    @Test
+    void testUpdateNullProduct() {
+        ProductRepository repo = new ProductRepository();
+        Product result = repo.update(null);
+        assertNull(result);
+    }
+
+    @Test
+    void testDeleteNonExistingId() {
+        ProductRepository repo = new ProductRepository();
+        repo.deleteById("not-exist");
+        assertNull(repo.findById("not-exist"));
+    }
+
+    @Test
+    void testFindByIdWhenIdIsNull() {
+        Product result = productRepository.findById(null);
+        assertNull(result);
+    }
+
+    @Test
+    void testUpdateProductIdNull() {
+        Product product = new Product();
+        product.setProductName("Test");
+        product.setProductQuantity(10);
+        // productId tidak di-set
+
+        Product result = productRepository.update(product);
+        assertNull(result);
+    }
+
+
+
+
+
+
 }
