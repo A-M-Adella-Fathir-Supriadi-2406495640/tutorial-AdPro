@@ -77,3 +77,44 @@ Jika saya membuat functional test suite baru untuk memverifikasi jumlah item dal
 ## Kesimpulan
 
 Unit test dan functional test memiliki peran yang berbeda namun saling melengkapi. Unit test membantu memastikan logika internal berjalan dengan benar, sedangkan functional test memastikan sistem bekerja sesuai perspektif pengguna. Penerapan clean code dalam test code sama pentingnya dengan production code agar proyek tetap terstruktur dan maintainable dalam jangka panjang.
+
+
+
+
+
+# Tutorial 2
+
+## REFLEKSI CI/CD DAN CODE QUALITY
+
+Code Quality Issue yang Diperbaiki
+Selama pengerjaan exercise, saya menemukan satu pelanggaran aturan dari PMD pada file ProductController.java.
+Issue yang muncul adalah:
+AvoidDuplicateLiterals — String literal "redirect:/product/list" muncul sebanyak 4 kali dalam satu file.
+Masalah ini terjadi karena saya menuliskan string yang sama berulang-ulang di beberapa method. Praktik ini tidak disarankan karena:
+- Mengurangi maintainability
+- Berisiko menimbulkan inkonsistensi jika suatu saat perlu diubah
+- Melanggar prinsip clean code
+
+Strategi perbaikan yang saya lakukan:
+Saya membuat sebuah constant dengan modifier private static final, misalnya:
+
+private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
+Kemudian seluruh penggunaan literal tersebut saya ganti menjadi:
+
+return REDIRECT_PRODUCT_LIST;
+
+Dengan cara ini:
+- Duplikasi literal hilang
+- Kode menjadi lebih rapi
+- Jika ingin mengubah URL redirect, cukup ubah di satu tempat
+- PMD tidak lagi mendeteksi pelanggaran tersebut pada workflow berikutnya
+
+Setiap perbaikan saya commit secara terpisah agar riwayat perubahan tetap jelas dan terstruktur.
+
+## Apakah Implementasi Ini Sudah Memenuhi Continuous Integration dan Continuous Deployment?
+
+Menurut saya, implementasi yang saya buat sudah memenuhi konsep Continuous Integration dan Continuous Deployment.
+Pertama, setiap kali ada push ke repository, GitHub Actions secara otomatis menjalankan workflow yang berisi proses build, unit test, dan code analysis (PMD). Hal ini sesuai dengan prinsip Continuous Integration karena setiap perubahan kode langsung diuji dan diverifikasi secara otomatis.
+Kedua, code scanning dan quality analysis juga dijalankan secara otomatis. Jika ditemukan pelanggaran aturan atau test gagal, maka workflow akan gagal. Ini memastikan bahwa hanya kode yang memenuhi standar kualitas yang bisa lanjut ke tahap berikutnya.
+Ketiga, setelah branch module-2-exercise digabungkan ke main, sistem otomatis melakukan deployment ke PaaS. Deployment terjadi tanpa intervensi manual setiap kali ada perubahan pada branch utama. Hal ini sudah mencerminkan Continuous Deployment karena setiap perubahan yang lolos pipeline langsung dipublikasikan ke environment yang dapat diakses.
+Dengan adanya proses otomatis untuk build, test, code analysis, dan deployment, maka pipeline yang saya implementasikan sudah memenuhi definisi CI/CD secara end-to-end.
