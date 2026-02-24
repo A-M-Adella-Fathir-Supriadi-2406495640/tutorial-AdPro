@@ -46,8 +46,7 @@ dependencies {
 }
 
 pmd {
-    toolVersion = "7.0.0-rc4"
-    ruleSets = emptyList() // supaya tidak pakai rules default lama
+    toolVersion = "7.0.0-rc4" // supaya tidak pakai rules default lama
 }
 
 tasks.withType<Test> {
