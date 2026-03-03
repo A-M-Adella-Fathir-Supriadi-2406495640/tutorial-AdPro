@@ -118,3 +118,37 @@ Pertama, setiap kali ada push ke repository, GitHub Actions secara otomatis menj
 Kedua, code scanning dan quality analysis juga dijalankan secara otomatis. Jika ditemukan pelanggaran aturan atau test gagal, maka workflow akan gagal. Ini memastikan bahwa hanya kode yang memenuhi standar kualitas yang bisa lanjut ke tahap berikutnya.
 Ketiga, setelah branch module-2-exercise digabungkan ke main, sistem otomatis melakukan deployment ke PaaS. Deployment terjadi tanpa intervensi manual setiap kali ada perubahan pada branch utama. Hal ini sudah mencerminkan Continuous Deployment karena setiap perubahan yang lolos pipeline langsung dipublikasikan ke environment yang dapat diakses.
 Dengan adanya proses otomatis untuk build, test, code analysis, dan deployment, maka pipeline yang saya implementasikan sudah memenuhi definisi CI/CD secara end-to-end.
+
+---
+
+# Exercise 3
+
+## 1) Explain what principles you apply to your project!
+
+- SRP (Single Responsibility Principle): Memisahkan CarController dari ProductController. Sekarang, CarController hanya bertanggung jawab atas alur logika mobil, bukan produk secara umum.
+- OCP (Open-Closed Principle): Menggunakan interface CarService. Jika di masa depan ingin menambah cara penyimpanan (misal: CarDatabaseService),cukup menambah kelas baru tanpa mengubah kode di CarController.
+- LSP (Liskov Substitution Principle): Dengan menghapus inheritance yang tidak tepat (CarController extends ProductController), kita menghindari situasi di mana CarController dipaksa memiliki perilaku Product yang mungkin tidak relevan atau merusak konsistensi program.
+- ISP (Interface Segregation Principle): Memastikan CarService hanya berisi metode yang dibutuhkan oleh objek mobil (seperti deleteCarById), sehingga implementasinya tidak terbebani oleh metode dari objek lain.
+- DIP (Dependency Inversion Principle): Di dalam CarController, kita menggunakan @Autowired private CarService carService; (tergantung pada abstraksi/interface), bukan langsung ke CarServiceImpl (kelas konkret).
+
+## 2) Explain the advantages of applying SOLID principles to your project with examples
+Penerapan SOLID memberikan keuntungan jangka panjang bagi pemeliharaan kode:
+
+- Kemudahan Pengujian (Maintainability): Karena setiap kelas hanya punya satu tugas (SRP), kita bisa membuat unit test yang sangat spesifik tanpa takut terganggu oleh logika lain.
+Contoh: Saat kita mengetes CarRepository, kita yakin tes tersebut hanya mengetes penyimpanan mobil, bukan validasi produk.
+
+- Fleksibilitas (Flexibility): Dengan DIP, kita bisa mengganti implementasi tanpa menyentuh kontroler.
+Contoh: Jika kamu ingin mengganti penyimpanan dari ArrayList ke Database, kamu hanya perlu mengubah implementasi di Service tanpa mengubah satu baris pun di CarController.
+
+- Kode Lebih Bersih (Readability): Memisahkan tanggung jawab membuat kode lebih mudah dibaca oleh rekan tim.
+
+## 3) Explain the disadvantages of not applying SOLID principles to your project with examples.
+- Rigidity (Kekakuan): Kode sulit diubah karena satu perubahan kecil merembet ke tempat lain.
+Contoh: Jika CarController masih extends ProductController, setiap kali kita mengubah cara kerja URL di ProductController, CarController bisa ikut rusak secara tidak sengaja.
+
+- Code Duplication & TODO Stubs: Tanpa implementasi yang benar (SRP), kita akan berakhir dengan banyak kode "TODO" yang tidak pernah selesai di Service Implementation, membuat aplikasi tidak fungsional.
+
+- Sulit Melakukan Testing: Karena kelas-kelas saling terikat erat (tightly coupled), kita sulit melakukan isolasi saat terjadi bug.
+Contoh: Kamu sulit mencari tahu apakah error berasal dari logika Car atau logika Product yang diwarisinya.
+
+
