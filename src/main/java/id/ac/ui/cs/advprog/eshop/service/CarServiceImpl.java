@@ -17,7 +17,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
-        // Mengerjakan TODO: Memanggil repository untuk membuat data baru
         return carRepository.create(car);
     }
 
@@ -36,13 +35,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void update(String carId, Car car) {
-        // Mengerjakan TODO: Memanggil repository untuk update data
         carRepository.update(carId, car);
     }
 
     @Override
     public void deleteCarById(String carId) {
-        // Mengerjakan TODO: Memanggil repository untuk hapus data
         carRepository.delete(carId);
     }
 }
