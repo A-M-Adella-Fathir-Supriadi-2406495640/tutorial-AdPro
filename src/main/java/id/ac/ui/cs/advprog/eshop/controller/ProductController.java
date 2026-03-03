@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import id.ac.ui.cs.advprog.eshop.model.Car;
+import id.ac.ui.cs.advprog.eshop.service.CarServiceImpl;
 
 import java.util.List;
 
@@ -59,4 +61,7 @@ public class ProductController {
         service.deleteById(id);
         return REDIRECT_PRODUCT_LIST;
     }
+
+
+
 }
