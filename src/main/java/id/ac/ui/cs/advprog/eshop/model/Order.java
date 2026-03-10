@@ -2,7 +2,7 @@ package id.ac.ui.cs.advprog.eshop.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import java.util.Arrays;
 import java.util.List;
 
 @Builder
@@ -12,17 +12,41 @@ public class Order {
     private List<Product> products;
     private Long orderTime;
     private String author;
-
-    @Setter
     private String status;
 
-    // Constructor 4 argumen
+    // Constructor 1: Tanpa parameter status (Default ke WAITING_PAYMENT)
     public Order(String id, List<Product> products, Long orderTime, String author) {
-        // Skeleton: Logika belum diimplementasi agar test gagal
+        this.id = id;
+        this.orderTime = orderTime;
+        this.author = author;
+        this.status = "WAITING_PAYMENT";
+
+        if (products.isEmpty()) {
+            throw new IllegalArgumentException();
+        } else {
+            this.products = products;
+        }
     }
 
-    // Constructor 5 argumen
+    // Constructor 2: Dengan parameter status (Validasi status input)
     public Order(String id, List<Product> products, Long orderTime, String author, String status) {
-        // Skeleton: Logika belum diimplementasi agar test gagal
+        this(id, products, orderTime, author);
+
+        String[] statusList = {"WAITING_PAYMENT", "FAILED", "SUCCESS", "CANCELLED"};
+        if (Arrays.stream(statusList).noneMatch(item -> (item.equals(status)))) {
+            throw new IllegalArgumentException();
+        } else {
+            this.status = status;
+        }
+    }
+
+    // Custom Setter untuk status dengan validasi
+    public void setStatus(String status) {
+        String[] statusList = {"WAITING_PAYMENT", "FAILED", "SUCCESS", "CANCELLED"};
+        if (Arrays.stream(statusList).noneMatch(item -> (item.equals(status)))) {
+            throw new IllegalArgumentException();
+        } else {
+            this.status = status;
+        }
     }
 }
