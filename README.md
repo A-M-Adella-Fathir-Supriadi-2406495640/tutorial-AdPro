@@ -150,5 +150,49 @@ Contoh: Jika CarController masih extends ProductController, setiap kali kita men
 
 - Sulit Melakukan Testing: Karena kelas-kelas saling terikat erat (tightly coupled), kita sulit melakukan isolasi saat terjadi bug.
 Contoh: Kamu sulit mencari tahu apakah error berasal dari logika Car atau logika Product yang diwarisinya.
+---
+
+# Reflection 4
+
+## 1. Reflect based on Percival (2017) proposed self-reflective questions (in “Principles and Best
+Practice of Testing” submodule, chapter “Evaluating Your Testing Objectives”), whether this
+TDD flow is useful enough for you or not. If not, explain things that you need to do next time
+you make more tests.
+
+Berdasarkan pertanyaan refleksi diri yang diusulkan oleh Percival (2017), saya merasa alur TDD yang digunakan dalam latihan ini sangat bermanfaat, terutama dalam memberikan panduan yang jelas selama pengembangan. Dengan menulis tes terlebih dahulu (fase Red), saya dipaksa untuk memahami persyaratan dan edge cases (seperti status yang tidak valid atau daftar produk kosong) sebelum menulis kode produksi. Hal ini mencegah adanya kode yang tidak perlu dan memastikan setiap baris kode memiliki tujuan yang spesifik.
+Namun, untuk meningkatkan kualitas pengujian saya berikutnya, saya perlu lebih fokus pada:
+- Menguji alasan ("Why") bukan hanya "Apa": Memastikan tes menjelaskan niat logika bisnis, bukan sekadar mengecek apakah sebuah variabel telah terisi.
+- Mengurangi ketergantungan (Coupling): Dalam beberapa kasus, tes sangat terikat dengan implementasi internal. Saya harus berusaha menulis tes yang lebih tahan banting terhadap perubahan struktur kode (refactoring).
+
+## 2. You have created unit tests in Tutorial. Now reflect whether your tests have successfully
+followed F.I.R.S.T. principle or not. If not, explain things that you need to do the next time you
+create more tests.
+
+Setelah membuat unit test untuk Order, OrderRepository, dan OrderService, saya telah mengevaluasinya berdasarkan prinsip F.I.R.S.T.:
+- Fast (Cepat): Ya. Tes berjalan cepat karena kita menggunakan Mockito untuk melakukan mock pada lapisan repository di dalam tes service, sehingga menghindari operasi I/O yang lambat.
+- Independent (Mandiri): Ya. Setiap kasus tes (Happy/Unhappy) di OrderRepositoryTest dan OrderServiceImplTest dapat berjalan sendiri. Penggunaan @BeforeEach memastikan data diatur ulang sebelum setiap tes dijalankan.
+- Repeatable (Dapat Diulang): Ya. Tes tidak bergantung pada faktor eksternal seperti database asli atau koneksi internet, sehingga hasilnya selalu sama di lingkungan mana pun.
+- Self-Validating (Validasi Otomatis): Ya. Setiap tes menggunakan assertion JUnit yang jelas (assertEquals, assertThrows, assertNull) untuk menentukan lulus atau gagal tanpa perlu pengecekan manual.
+- Timely (Tepat Waktu): Ya. Kita mengikuti alur kerja TDD di mana tes ditulis sebelum implementasi sebenarnya dilakukan (Red-Green-Refactor).
+
+Meskipun tes sudah mengikuti prinsip dengan baik, saya dapat meningkatkan aspek Self-Validating menjadi lebih informatif dengan menambahkan pesan deskriptif pada assertion untuk mempercepat proses debugging ketika terjadi kegagalan tes di masa mendatang.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
