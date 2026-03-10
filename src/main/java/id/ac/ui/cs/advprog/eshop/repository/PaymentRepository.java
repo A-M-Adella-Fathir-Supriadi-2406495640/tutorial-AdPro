@@ -4,29 +4,31 @@ import id.ac.ui.cs.advprog.eshop.model.Payment;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class PaymentRepository {
     private List<Payment> payments = new ArrayList<>();
 
     public Payment save(Payment payment) {
-        for (int i = 0; i < payments.size(); i++) {
-            if (payments.get(i).getId().equals(payment.getId())) {
-                payments.set(i, payment);
-                return payment;
-            }
+        Optional<Payment> existing = payments.stream()
+                .filter(p -> p.getId().equals(payment.getId()))
+                .findFirst();
+
+        if (existing.isPresent()) {
+            int index = payments.indexOf(existing.get());
+            payments.set(index, payment);
+        } else {
+            payments.add(payment);
         }
-        payments.add(payment);
         return payment;
     }
 
     public Payment findById(String id) {
-        for (Payment payment : payments) {
-            if (payment.getId().equals(id)) {
-                return payment;
-            }
-        }
-        return null;
+        return payments.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Payment> findAll() {
