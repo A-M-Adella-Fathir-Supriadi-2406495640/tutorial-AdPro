@@ -35,24 +35,29 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private String determineStatus(String method, Map<String, String> paymentData) {
-        if ("VOUCHER".equals(method)) {
-            return isVoucherValid(paymentData.get("voucherCode")) ? "SUCCESS" : "REJECTED";
-        }
-        if ("BANK_TRANSFER".equals(method)) {
-            String bankName = paymentData.get("bankName");
-            String refCode = paymentData.get("referenceCode");
-            boolean invalid = bankName == null || bankName.isEmpty()
-                    || refCode == null || refCode.isEmpty();
-            return invalid ? "REJECTED" : "SUCCESS";
-        }
-        return "WAITING_CONFIRMATION";
+        return switch (method) {
+            case "VOUCHER" -> isVoucherValid(paymentData.get("voucherCode")) ? "SUCCESS" : "REJECTED";
+            case "BANK_TRANSFER" -> isBankTransferValid(paymentData) ? "SUCCESS" : "REJECTED";
+            default -> "WAITING_CONFIRMATION";
+        };
     }
 
     private boolean isVoucherValid(String code) {
-        if (code == null || code.length() != 16) return false;
+        if (code == null) return false;
+        if (code.length() != 16) return false;
         if (!code.startsWith("ESHOP")) return false;
-        long digits = code.chars().filter(Character::isDigit).count();
-        return digits == 8;
+        long digitCount = code.chars()
+                .filter(Character::isDigit)
+                .count();
+        return digitCount == 8;
+    }
+
+    // Method baru yang di-extract dari determineStatus
+    private boolean isBankTransferValid(Map<String, String> paymentData) {
+        String bankName = paymentData.get("bankName");
+        String referenceCode = paymentData.get("referenceCode");
+        return bankName != null && !bankName.isEmpty()
+                && referenceCode != null && !referenceCode.isEmpty();
     }
 
     @Override
